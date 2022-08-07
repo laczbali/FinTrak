@@ -18,7 +18,7 @@ Track spendings through charts and reports
  - Define RegEx for handling incoming POSTs
 
 **Backend**
-- Database in AWS (Aurora)
+- Database in AWS (Aurora Serverless)
 - Code in .NET, running on AWS Lambda
 - Receives POST requests, runs them through a ruleset
   - Automatically assign a category, based on source, amount
