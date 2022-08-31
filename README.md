@@ -1,7 +1,15 @@
 # FinTrak
 Track spendings through charts and reports
 
-# Requirements
+# TODO
+1. ~~HelloWorld in Lambda~~
+2. Setup autodeploy from master branch
+3. HelloWorld with database
+   1. Basic setup
+   2. Schema
+   3. Access
+
+# Feature goals
 **Frontend**
 - Displays spendings
   - Every item, in a list
