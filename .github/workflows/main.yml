@@ -1,0 +1,46 @@
+name: deploy
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  # build the .NET backend
+  deploy-backend:
+  
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check-out repo
+        uses: actions/checkout@v3
+        
+      - name: Build backend
+        working-directory: ./backend
+        run: dotnet publish --output "./publish" --configuration "Release" --framework "net6.0" /p:GenerateRuntimeConfigurationFiles=true --runtime linux-x64 --self-contained false
+        
+      - name: Zip backend
+        working-directory: ./backend/publish
+        run: zip backend.zip *
+        
+      - name: Install AWS CLI
+        uses: unfor19/install-aws-cli-action@v1.0.3
+          
+      - name: Upload zip to Lambda
+        working-directory: ./backend/publish
+        run: aws lambda update-function-code --function-name FintrakBackend --zip-file fileb://backend.zip --region us-east-1
+          
+  #deploy-frontend:
+    #runs-on: ubuntu-latest
+    
+          
+
