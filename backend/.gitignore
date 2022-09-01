@@ -4,3 +4,6 @@
 # build related
 bin/
 obj/
+
+# environment
+.env
