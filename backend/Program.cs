@@ -4,6 +4,17 @@ using fintrak.Middleware;
 using fintrak.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Set up environment variable config provider
+// env vars to configure are:
+// - optional on localhost
+// 		- fintrak_dbserver
+// 		- fintrak_dbuser
+// 		- fintrak_dbpassword
+//		- fintrak_token
+// - required everywhere
+// 		- fintrak_envname
+
 builder.Configuration.AddEnvironmentVariables();
 string EnvVar(string key, string defaultValue) => builder?.Configuration.GetValue<string>(key) ?? defaultValue;
 

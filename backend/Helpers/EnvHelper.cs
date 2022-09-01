@@ -15,13 +15,12 @@
 			var success = Enum.TryParse<Environments>(envnameVar, out var env);
 
 			if(success) return env;
-			return Environments.Unset;
+			throw new Exception("fintrak_envname is unset, or incorrect");
 
 		}
 
 		public enum Environments
 		{
-			Unset,
 			Localhost,
 			Lambda
 		}

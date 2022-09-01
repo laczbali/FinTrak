@@ -65,7 +65,7 @@ namespace fintrak.Middleware
             var goldenToken = this._configuration.GetValue<string>("fintrak_token");
             if(goldenToken == null || goldenToken == "")
 			{
-                throw new Exception("Auth token is unset");
+                throw new Exception("fintrak_token is unset");
 			}
 
             return (goldenToken == token);
