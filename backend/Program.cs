@@ -1,5 +1,7 @@
 using fintrak.Data;
 using Microsoft.EntityFrameworkCore;
+using fintrak.Middleware;
+using fintrak.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddEnvironmentVariables();
@@ -7,6 +9,8 @@ string EnvVar(string key, string defaultValue) => builder?.Configuration.GetValu
 
 // Configure services
 builder.Services.AddControllers();
+builder.Services.AddTransient<DbProvider>();
+builder.Services.AddTransient<EnvHelper>();
 
 // Add AWS Lambda support. When application is run in Lambda Kestrel is swapped out as the web server with Amazon.Lambda.AspNetCoreServer. This
 // package will act as the webserver translating request and responses between the Lambda event source and ASP.NET Core.
@@ -34,10 +38,13 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Build app
 var app = builder.Build();
 
-// Configure middleware
+// Configure middleware pipeline
 app.UseHttpsRedirection();
+app.UseTokenAuth();
 app.UseAuthorization();
 app.MapControllers();
 
 // Start app
 app.Run();
+
+// TODO add global error handler
