@@ -28,12 +28,43 @@ namespace fintrak.Migrations
                     b.Property<float>("Amount")
                         .HasColumnType("float");
 
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
                     b.Property<DateTime>("Timestamp")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Transactions");
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("Transaction");
+                });
+
+            modelBuilder.Entity("fintrak.Data.Models.TransactionCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TransactionCategory");
+                });
+
+            modelBuilder.Entity("fintrak.Data.Models.Transaction", b =>
+                {
+                    b.HasOne("fintrak.Data.Models.TransactionCategory", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId");
+
+                    b.Navigation("Category");
                 });
 #pragma warning restore 612, 618
         }
