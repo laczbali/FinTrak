@@ -1,6 +1,7 @@
 using fintrak.Data;
 using fintrak.Data.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace fintrak.Controllers;
 
@@ -26,10 +27,16 @@ public class SystemController : ControllerBase
     {
         // TODO return straight away if not in dev mode
 
-        this._db.Transactions.Add(new Transaction { Amount = 100, Timestamp = DateTime.Now});
-        this._db.SaveChanges();
+        var connection = this._db.Database.GetDbConnection();
+        if(connection.State == System.Data.ConnectionState.Closed)
+		{
+            connection.Open();
+		}
+        var command = connection.CreateCommand();
+        command.CommandText = "select 1 from dual";
+        var result = command.ExecuteScalar();
 
-        return Ok("ok");
+        return Ok(result?.ToString());
     }
 
 }
