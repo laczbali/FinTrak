@@ -47,6 +47,10 @@ jobs:
         working-directory: ./backend/bin/publish
         run: zip backend.zip *
           
+      - name: Update Lambda env vars
+        working-directory: ./backend/bin/publish
+        run: aws lambda update-function-configuration --function-name FintrakBackend --region us-east-1 --environment "Variables={fintrak_dbserver=$fintrak_dbserver,fintrak_dbuser=$fintrak_dbuser,fintrak_dbpassword=$fintrak_dbpassword}"
+
       - name: Upload zip to Lambda
         working-directory: ./backend/bin/publish
         run: aws lambda update-function-code --function-name FintrakBackend --zip-file fileb://backend.zip --region us-east-1 --environment "Variables={fintrak_dbserver=$fintrak_dbserver,fintrak_dbuser=$fintrak_dbuser,fintrak_dbpassword=$fintrak_dbpassword}"
