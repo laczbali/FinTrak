@@ -8,7 +8,7 @@ Track spendings through charts and reports
    4. ~~Local~~
    5. ~~Remote~~
 4. ~~Handle environment-dependent db connection strings~~
-5. Scripts & workflows for DB migrations 
+5. ~~Scripts & workflows for DB migrations~~
 6.  Backend API
    1. Create \ Update \ Delete spendings
    2. Return spendings, based on query JSON

@@ -1,5 +1,8 @@
-﻿namespace fintrak.Data.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace fintrak.Data.Models
 {
+	 [Table("transactions")]
 	public class Transaction
 	{
 		public int Id { get; set; }
