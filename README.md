@@ -5,12 +5,18 @@ Track spendings through charts and reports
 1. ~~HelloWorld in Lambda~~
 2. ~~Setup autodeploy from master branch~~
 3. HelloWorld with database
-   1. Basic setup
-   2. Schema
-   3. Access
-4. Backend API
+   4. Local
+   5. Remote
+6. Scripts & workflows for DB migrations 
+7. Backend API
    1. Create \ Update \ Delete spendings
    2. Return spendings, based on query JSON
+8. Choose frotnend framework (Svelte vs Angular)
+9. HelloWorld frontend in Amazon S3
+10. Extend current GitHub workflow with frotnend build and deploy
+11. Frontend can call backend (both locally and in AWS)
+
+Query JSON:
 ```json
 [
   {
@@ -23,10 +29,6 @@ Track spendings through charts and reports
   }
 ]
 ```
-5. Choose frotnend framework (Svelte vs Angular)
-6. HelloWorld frontend in Amazon S3
-7. Extend current GitHub workflow with frotnend build and deploy
-8. Frontend can call backend (both locally and in AWS)
 
 # Feature goals
 **Frontend**
