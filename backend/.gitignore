@@ -1,3 +1,6 @@
+# vs stuff
+.vs/
+
 # build related
 bin/
 obj/
