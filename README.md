@@ -5,7 +5,7 @@ Track spendings through charts and reports
 1. ~~HelloWorld in Lambda~~
 2. ~~Setup autodeploy from master branch~~
 3. HelloWorld with database
-   4. Local
+   4. ~~Local~~
    5. Remote
 6. Scripts & workflows for DB migrations 
 7. Backend API
