@@ -1,15 +1,15 @@
 ﻿using fintrak.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace fintrak.Data
+namespace fintrak.Data.Providers
 {
-	public class DbProvider
+	public class BaseDbProvider
 	{
 		private readonly AppDbContext _db;
 
-		public DbProvider(AppDbContext db)
+		public BaseDbProvider(AppDbContext db)
 		{
-			this._db = db;
+			_db = db;
 		}
 
 		/// <summary>
@@ -18,7 +18,7 @@ namespace fintrak.Data
 		/// <returns></returns>
 		public List<TransactionCategory> GetAllCategories()
 		{
-			return this._db.TransactionCategories.ToList();
+			return _db.TransactionCategories.ToList();
 		}
 
 		/// <summary>
@@ -28,8 +28,8 @@ namespace fintrak.Data
 		/// <returns></returns>
 		public TransactionCategory? NewTransactionCategory(TransactionCategory model)
 		{
-			this._db.Add(model);
-			this._db.SaveChanges();
+			_db.Add(model);
+			_db.SaveChanges();
 			return model;
 		}
 
@@ -40,19 +40,19 @@ namespace fintrak.Data
 		/// <exception cref="NotImplementedException"></exception>
 		public void RemoveTransactionCategory(string categoryName)
 		{
-			var savedCategory = this._db.TransactionCategories.FirstOrDefault(x => x.Name == categoryName);
+			var savedCategory = _db.TransactionCategories.FirstOrDefault(x => x.Name == categoryName);
 			if (savedCategory == null) throw new ArgumentException($"Couldn't find category with name of [{categoryName}]");
 
-			var transactionsOfCategory = this._db.Transactions
+			var transactionsOfCategory = _db.Transactions
 				.Where(x => x.Category == savedCategory);
 			foreach (var t in transactionsOfCategory)
 			{
 				t.Category = null;
 				t.CategoryName = null;
 			}
-			
-			this._db.TransactionCategories.Remove(savedCategory);
-			this._db.SaveChanges();
+
+			_db.TransactionCategories.Remove(savedCategory);
+			_db.SaveChanges();
 		}
 
 		/// <summary>
@@ -67,12 +67,12 @@ namespace fintrak.Data
 
 			if (model.Category != null)
 			{
-				var savedCategory = this._db.TransactionCategories.FirstOrDefault(x => x.Name == model.Category.Name);
+				var savedCategory = _db.TransactionCategories.FirstOrDefault(x => x.Name == model.Category.Name);
 				model.Category = savedCategory;
 			}
 
-			this._db.Transactions.Add(model);
-			this._db.SaveChanges();
+			_db.Transactions.Add(model);
+			_db.SaveChanges();
 
 			return model;
 		}
@@ -84,13 +84,13 @@ namespace fintrak.Data
 		/// <returns></returns>
 		public Transaction? ChangeTransaction(Transaction model)
 		{
-			var savedTransaction = this._db.Transactions.FirstOrDefault(x => x.Id == model.Id);
+			var savedTransaction = _db.Transactions.FirstOrDefault(x => x.Id == model.Id);
 			if (savedTransaction == null) throw new ArgumentException($"Couldn't find transaction with ID of [{model.Id}]");
 
 			if (model.Timestamp == DateTime.MinValue) model.Timestamp = DateTime.UtcNow;
-			if(model.Category != null)
+			if (model.Category != null)
 			{
-				model.Category = this._db.TransactionCategories.FirstOrDefault(x => x.Name == model.Category.Name);
+				model.Category = _db.TransactionCategories.FirstOrDefault(x => x.Name == model.Category.Name);
 			}
 
 			savedTransaction.Description = model.Description;
@@ -99,8 +99,8 @@ namespace fintrak.Data
 
 			savedTransaction.Category = model.Category;
 			if (model.Category == null) savedTransaction.CategoryName = null;
-			
-			this._db.SaveChanges();
+
+			_db.SaveChanges();
 			return savedTransaction;
 		}
 	}

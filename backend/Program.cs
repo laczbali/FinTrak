@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using fintrak.Middleware;
 using fintrak.Helpers;
 using System.Reflection;
+using fintrak.Data.Providers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +22,8 @@ string EnvVar(string key, string defaultValue) => builder?.Configuration.GetValu
 
 // Configure services
 builder.Services.AddControllers();
-builder.Services.AddTransient<DbProvider>();
+builder.Services.AddTransient<BaseDbProvider>();
+builder.Services.AddTransient<ReportDbProvider>();
 builder.Services.AddTransient<EnvHelper>();
 
 // Configure Swagger

@@ -1,5 +1,5 @@
-﻿using fintrak.Data;
-using fintrak.Data.Models;
+﻿using fintrak.Data.Models;
+using fintrak.Data.Providers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace fintrak.Controllers
@@ -8,9 +8,9 @@ namespace fintrak.Controllers
 	[Route("categories")]
 	public class CategoryController : ControllerBase
 	{
-		private readonly DbProvider _dbProvider;
+		private readonly BaseDbProvider _dbProvider;
 
-		public CategoryController(DbProvider dbProvider)
+		public CategoryController(BaseDbProvider dbProvider)
 		{
 			this._dbProvider = dbProvider;
 		}
@@ -24,17 +24,12 @@ namespace fintrak.Controllers
 		[HttpPost("")]
 		public IActionResult CreateNew([FromBody] TransactionCategory model)
 		{
-			if(model is null || !this.ModelState.IsValid) return BadRequest(this.ModelState);
-
-			var result = this._dbProvider.NewTransactionCategory(model);
-			return Ok(result);
+			return Ok(this._dbProvider.NewTransactionCategory(model));
 		}
 
 		[HttpDelete("{name}")]
 		public IActionResult Delete(string name)
 		{
-			if (string.IsNullOrEmpty(name)) return BadRequest("Must provide name");
-
 			this._dbProvider.RemoveTransactionCategory(name);
 			return Ok();
 		}

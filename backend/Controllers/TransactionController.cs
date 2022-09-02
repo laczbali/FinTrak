@@ -1,5 +1,5 @@
-﻿using fintrak.Data;
-using fintrak.Data.Models;
+﻿using fintrak.Data.Models;
+using fintrak.Data.Providers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace fintrak.Controllers
@@ -8,9 +8,9 @@ namespace fintrak.Controllers
 	[Route("transactions")]
 	public class TransactionController : ControllerBase
 	{
-		private readonly DbProvider _dbProvider;
+		private readonly BaseDbProvider _dbProvider;
 
-		public TransactionController(DbProvider db)
+		public TransactionController(BaseDbProvider db)
 		{
 			this._dbProvider = db;
 		}
@@ -18,19 +18,13 @@ namespace fintrak.Controllers
 		[HttpPost("")]
 		public IActionResult PostTransaction([FromBody] Transaction model)
 		{
-			if(model is null || !this.ModelState.IsValid) return BadRequest(this.ModelState);
-
-			var result = this._dbProvider.SaveNewTransaction(model);
-			return Ok(result);
+			return Ok(this._dbProvider.SaveNewTransaction(model));
 		}
 
 		[HttpPatch("")]
 		public IActionResult ChangeTransaction([FromBody] Transaction model)
 		{
-			if (model is null || !this.ModelState.IsValid) return BadRequest(this.ModelState);
-
-			var result = this._dbProvider.ChangeTransaction(model);
-			return Ok(result);
+			return Ok(this._dbProvider.ChangeTransaction(model));
 		}
 	}
 }

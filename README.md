@@ -2,11 +2,8 @@
 Track spendings through charts and reports
 
 # TODO
--  Backend API
-   - Create \ Update \ Delete spendings
-   - Return spendings, based on query JSON
-- Choose frotnend framework (Svelte vs Angular)
-- HelloWorld frontend in Amazon S3
+- Set up auth
+- HelloWorld frontend in Amazon S3 (Svelte)
 -  Extend current GitHub workflow with frotnend build and deploy
 -  Frontend can call backend (both locally and in AWS)
 
