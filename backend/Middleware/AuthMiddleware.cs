@@ -28,7 +28,7 @@ namespace fintrak.Middleware
 		{
 			// no auth needed for root endpoint
 			// no auth needed for localhost
-			if (context.Request.Path == "/" || this._envHelper.GetCurrentEnv() == EnvHelper.Environments.Localhost)
+			if (context.Request.Path == "/" || this._envHelper.GetCurrentEnv() == EnvHelper.Environments.LOCALHOST)
 			{
 				await this._next(context);
 				return;

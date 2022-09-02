@@ -12,32 +12,63 @@ namespace fintrak.Data
 			this._db = db;
 		}
 
-		public object? IsDbConnectionOK()
+		public List<TransactionCategory> GetAllCategories()
 		{
-			var connection = this._db.Database.GetDbConnection();
-			if (connection.State == System.Data.ConnectionState.Closed)
-			{
-				connection.Open();
-			}
-			var command = connection.CreateCommand();
-			command.CommandText = "select 1 from dual";
-			var result = (long)(command.ExecuteScalar() ?? 0);
-
-			return (result == 1);
+			return this._db.TransactionCategories.ToList();
 		}
 
-		public Transaction SaveNewTransaction(Transaction model)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="model"></param>
+		/// <returns></returns>
+		public TransactionCategory? NewTransactionCategory(TransactionCategory model)
 		{
+			this._db.Add(model);
+			this._db.SaveChanges();
+			return model;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="categoryName"></param>
+		/// <exception cref="NotImplementedException"></exception>
+		public void RemoveTransactionCategory(string categoryName)
+		{
+			var savedCategory = this._db.TransactionCategories.FirstOrDefault(x => x.Name == categoryName);
+			if (savedCategory == null) throw new ArgumentException($"Couldn't find category with name of [{categoryName}]");
+
+			var transactionsOfCategory = this._db.Transactions
+				.Where(x => x.Category == savedCategory);
+			foreach (var t in transactionsOfCategory)
+			{
+				t.Category = null;
+			}
+			
+			this._db.TransactionCategories.Remove(savedCategory);
+			this._db.SaveChanges();
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="model"></param>
+		/// <returns></returns>
+		public Transaction? SaveNewTransaction(Transaction model)
+		{
+
 			if (model.Timestamp == DateTime.MinValue) model.Timestamp = DateTime.UtcNow;
 			if (model.Id != 0) model.Id = 0;
 
-			if(model.Category != null)
+			if (model.Category != null)
 			{
-				
+				var savedCategory = this._db.TransactionCategories.FirstOrDefault(x => x.Name == model.Category.Name);
+				model.Category = savedCategory;
 			}
 
-			//this._db.Transactions.Add(model);
-			//this._db.SaveChanges();
+			this._db.Transactions.Add(model);
+			this._db.SaveChanges();
 
 			return model;
 		}

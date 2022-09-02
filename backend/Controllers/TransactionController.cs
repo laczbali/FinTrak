@@ -18,13 +18,9 @@ namespace fintrak.Controllers
 		[HttpPost("")]
 		public IActionResult PostTransaction([FromBody] Transaction model)
 		{
-			if(model is null || !this.ModelState.IsValid)
-			{
-				return BadRequest(this.ModelState);
-			}
+			if(model is null || !this.ModelState.IsValid) return BadRequest(this.ModelState);
 
 			var result = this._dbProvider.SaveNewTransaction(model);
-
 			return Ok(result);
 		}
 	}

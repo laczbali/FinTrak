@@ -15,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 // - required everywhere
 // 		- fintrak_envname
 
-builder.Configuration.AddEnvironmentVariables();
+builder.Configuration.AddEnvironmentVariables("fintrak_");
 string EnvVar(string key, string defaultValue) => builder?.Configuration.GetValue<string>(key) ?? defaultValue;
 
 // Configure services

@@ -12,6 +12,7 @@
 		public Environments GetCurrentEnv()
 		{
 			var envnameVar = _configuration.GetValue<string>("fintrak_envname") ?? "";
+			envnameVar = envnameVar.ToUpper();
 			var success = Enum.TryParse<Environments>(envnameVar, out var env);
 
 			if(success) return env;
@@ -21,8 +22,8 @@
 
 		public enum Environments
 		{
-			Localhost,
-			Lambda
+			LOCALHOST,
+			LAMBDA
 		}
 	}
 }
