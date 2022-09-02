@@ -12,6 +12,10 @@ namespace fintrak.Data
 			this._db = db;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
 		public List<TransactionCategory> GetAllCategories()
 		{
 			return this._db.TransactionCategories.ToList();
