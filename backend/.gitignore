@@ -1,5 +1,6 @@
 # vs stuff
 .vs/
+Properties/
 
 # build related
 bin/
