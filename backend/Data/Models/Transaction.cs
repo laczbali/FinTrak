@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace fintrak.Data.Models
 {
@@ -16,6 +17,9 @@ namespace fintrak.Data.Models
 		[Required]
 		public string? Description { get; set; }
 
+		[JsonIgnore]
+		[ForeignKey("Category")]
+		public string? CategoryName { get; set; }
 		public TransactionCategory? Category { get; set; }
 	}
 }

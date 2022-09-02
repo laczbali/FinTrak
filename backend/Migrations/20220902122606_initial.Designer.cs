@@ -11,7 +11,7 @@ using fintrak.Data;
 namespace fintrak.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220902095032_initial")]
+    [Migration("20220902122606_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

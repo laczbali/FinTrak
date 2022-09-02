@@ -48,6 +48,7 @@ namespace fintrak.Data
 			foreach (var t in transactionsOfCategory)
 			{
 				t.Category = null;
+				t.CategoryName = null;
 			}
 			
 			this._db.TransactionCategories.Remove(savedCategory);
@@ -61,7 +62,6 @@ namespace fintrak.Data
 		/// <returns></returns>
 		public Transaction? SaveNewTransaction(Transaction model)
 		{
-
 			if (model.Timestamp == DateTime.MinValue) model.Timestamp = DateTime.UtcNow;
 			if (model.Id != 0) model.Id = 0;
 
@@ -75,6 +75,33 @@ namespace fintrak.Data
 			this._db.SaveChanges();
 
 			return model;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="model"></param>
+		/// <returns></returns>
+		public Transaction? ChangeTransaction(Transaction model)
+		{
+			var savedTransaction = this._db.Transactions.FirstOrDefault(x => x.Id == model.Id);
+			if (savedTransaction == null) throw new ArgumentException($"Couldn't find transaction with ID of [{model.Id}]");
+
+			if (model.Timestamp == DateTime.MinValue) model.Timestamp = DateTime.UtcNow;
+			if(model.Category != null)
+			{
+				model.Category = this._db.TransactionCategories.FirstOrDefault(x => x.Name == model.Category.Name);
+			}
+
+			savedTransaction.Description = model.Description;
+			savedTransaction.Timestamp = model.Timestamp;
+			savedTransaction.Amount = model.Amount;
+
+			savedTransaction.Category = model.Category;
+			if (model.Category == null) savedTransaction.CategoryName = null;
+			
+			this._db.SaveChanges();
+			return savedTransaction;
 		}
 	}
 }

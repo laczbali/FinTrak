@@ -23,5 +23,14 @@ namespace fintrak.Controllers
 			var result = this._dbProvider.SaveNewTransaction(model);
 			return Ok(result);
 		}
+
+		[HttpPatch("")]
+		public IActionResult ChangeTransaction([FromBody] Transaction model)
+		{
+			if (model is null || !this.ModelState.IsValid) return BadRequest(this.ModelState);
+
+			var result = this._dbProvider.ChangeTransaction(model);
+			return Ok(result);
+		}
 	}
 }
