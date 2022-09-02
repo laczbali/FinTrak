@@ -25,13 +25,15 @@ namespace fintrak.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<float>("Amount")
+                    b.Property<float?>("Amount")
+                        .IsRequired()
                         .HasColumnType("float");
 
-                    b.Property<int?>("CategoryId")
-                        .HasColumnType("int");
+                    b.Property<string>("CategoryName")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<DateTime>("Timestamp")
@@ -39,30 +41,39 @@ namespace fintrak.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("CategoryName");
 
                     b.ToTable("transactions");
                 });
 
             modelBuilder.Entity("fintrak.Data.Models.TransactionCategory", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Name");
 
                     b.ToTable("transaction_categories");
+                });
+
+            modelBuilder.Entity("fintrak.Data.Models.UserQuery", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("QueryJson")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Name");
+
+                    b.ToTable("user_queries");
                 });
 
             modelBuilder.Entity("fintrak.Data.Models.Transaction", b =>
                 {
                     b.HasOne("fintrak.Data.Models.TransactionCategory", "Category")
                         .WithMany()
-                        .HasForeignKey("CategoryId");
+                        .HasForeignKey("CategoryName");
 
                     b.Navigation("Category");
                 });
