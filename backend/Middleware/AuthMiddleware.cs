@@ -33,7 +33,22 @@ namespace fintrak.Middleware
 				return;
 			}
 
+			context.Request.Headers.TryGetValue("Authorization", out var authHeader);
 
+			var authToken = authHeader.ToString().Replace("Bearer ", "");
+			if (authToken == null || authToken == "")
+			{
+				// no token was provided
+				context.Response.StatusCode = 401;
+				return;
+			}
+
+			// check if the token is valid
+			if (!IsTokenValid(authToken))
+			{
+				context.Response.StatusCode = 401;
+				return;
+			}
 
 			// Call the next delegate/middleware in the pipeline.
 			await this._next(context);

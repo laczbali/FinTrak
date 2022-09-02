@@ -2,10 +2,10 @@
 Track spendings through charts and reports
 
 # TODO
-- Set up auth
 - HelloWorld frontend in Amazon S3 (Svelte)
 -  Extend current GitHub workflow with frotnend build and deploy
 -  Frontend can call backend (both locally and in AWS)
+- Set up auth
 
 Query JSON:
 ```json
