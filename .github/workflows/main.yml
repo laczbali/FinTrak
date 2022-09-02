@@ -20,6 +20,8 @@ jobs:
       fintrak_dbserver: ${{ secrets.AWS_DB_HOST }}
       fintrak_dbuser: ${{ secrets.AWS_DB_USER }}
       fintrak_dbpassword: ${{ secrets.AWS_DB_PASSWORD }}
+      # used for auth
+      fintrak_token: ${{ secrets.FINTRAK_TOKEN }}
   
     runs-on: ubuntu-latest
 
@@ -51,7 +53,7 @@ jobs:
           
       - name: Update Lambda env vars
         working-directory: ./backend/bin/publish
-        run: aws lambda update-function-configuration --function-name FintrakBackend --region us-east-1 --environment "Variables={fintrak_dbserver=$fintrak_dbserver,fintrak_dbuser=$fintrak_dbuser,fintrak_dbpassword=$fintrak_dbpassword}"
+        run: aws lambda update-function-configuration --function-name FintrakBackend --region us-east-1 --environment "Variables={fintrak_envname=LAMBDA,fintrak_token=$fintrak_token,fintrak_dbserver=$fintrak_dbserver,fintrak_dbuser=$fintrak_dbuser,fintrak_dbpassword=$fintrak_dbpassword}"
 
       - name: Upload zip to Lambda
         working-directory: ./backend/bin/publish
