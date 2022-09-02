@@ -11,7 +11,6 @@ namespace fintrak.Middleware
 		/// <summary>
 		/// Called by app, at startup
 		/// </summary>
-		/// <param name="next"></param>
 		public AuthMiddleware(RequestDelegate next, EnvHelper envHelper, IConfiguration configuration)
 		{
 			this._next = next;
