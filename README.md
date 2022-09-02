@@ -24,6 +24,13 @@ Query JSON:
 ]
 ```
 
+# How to Use
+**Environment Variables**
+## Locally
+**VS Code Tasks**
+## On AWS
+**GitHub Actions**
+
 # Feature goals
 **Frontend**
 - Displays spendings

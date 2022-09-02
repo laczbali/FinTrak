@@ -51,7 +51,7 @@ var app = builder.Build();
 
 // Configure middleware pipeline
 app.UseHttpsRedirection();
-app.UseTokenAuth();
+app.UseAuth();
 app.UseAuthorization();
 app.MapControllers();
 
