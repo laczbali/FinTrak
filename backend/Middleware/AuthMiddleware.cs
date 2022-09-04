@@ -6,16 +6,14 @@ namespace fintrak.Middleware
 	{
 		private readonly RequestDelegate _next;
 		private readonly EnvHelper _envHelper;
-		private readonly IConfiguration _configuration;
 
 		/// <summary>
 		/// Called by app, at startup
 		/// </summary>
-		public AuthMiddleware(RequestDelegate next, EnvHelper envHelper, IConfiguration configuration)
+		public AuthMiddleware(RequestDelegate next, EnvHelper envHelper)
 		{
 			this._next = next;
 			this._envHelper = envHelper;
-			this._configuration = configuration;
 		}
 
 		/// <summary>
@@ -27,7 +25,7 @@ namespace fintrak.Middleware
 		{
 			// no auth needed for root endpoint
 			// no auth needed for localhost
-			if (context.Request.Path == "/" || this._envHelper.GetCurrentEnv() == EnvHelper.Environments.LOCALHOST)
+			if (context.Request.Path == "/" || this._envHelper.Config.CurrentEnvironment == EnvHelper.Environments.LOCALHOST)
 			{
 				await this._next(context);
 				return;
@@ -56,7 +54,7 @@ namespace fintrak.Middleware
 
 		private bool IsTokenValid(string token)
 		{
-			var goldenToken = this._configuration.GetValue<string>("fintrak_token");
+			var goldenToken = this._envHelper.Config.AuthToken;
 			if (goldenToken == null || goldenToken == "")
 			{
 				throw new Exception("fintrak_token is unset");

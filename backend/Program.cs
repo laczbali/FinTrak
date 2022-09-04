@@ -1,4 +1,3 @@
-using fintrak.Data;
 using fintrak.Middleware;
 using fintrak.Helpers;
 using System.Reflection;
@@ -8,24 +7,27 @@ using Amazon.DynamoDBv2;
 var builder = WebApplication.CreateBuilder(args);
 
 // Set up environment variable config provider
-// env vars to configure are:
-// - optional on localhost
-// 		- fintrak_dbserver
-// 		- fintrak_dbuser
-// 		- fintrak_dbpassword
-//		- fintrak_token
-// - required everywhere
-// 		- fintrak_envname
-
 builder.Configuration.AddEnvironmentVariables("fintrak_");
 string EnvVar(string key, string defaultValue) => builder?.Configuration.GetValue<string>(key) ?? defaultValue;
 
+string dynamoDbAccessKey = EnvVar("fintrak_dynamoaccess", "");
+string dynamoDbSecretKey = EnvVar("fintrak_dynamosecret", "");
+if (String.IsNullOrEmpty(dynamoDbSecretKey) || String.IsNullOrEmpty(dynamoDbAccessKey))
+	throw new Exception("fintrak_dynamoaccess or fintrak_dynamosecret is not set");
+
 // Configure services
 builder.Services.AddControllers();
-builder.Services.AddSingleton<IAmazonDynamoDB>();
-builder.Services.AddSingleton<BaseDbProvider>();
+builder.Services.AddSingleton<IAmazonDynamoDB>(_ =>
+	new AmazonDynamoDBClient(
+		dynamoDbAccessKey,
+		dynamoDbSecretKey,
+		Amazon.RegionEndpoint.USEast1
+	)
+);
+builder.Services.AddSingleton<TransactionDbProvider>();
 builder.Services.AddSingleton<ReportDbProvider>();
 builder.Services.AddSingleton<EnvHelper>();
+builder.Services.AddSingleton<DbHelper>();
 
 // Configure Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -44,7 +46,7 @@ builder.Services.AddAWSLambdaHosting(LambdaEventSource.HttpApi);
 
 // Build app
 var app = builder.Build();
-if(EnvVar("fintrak_envname", "") == "localhost")
+if (EnvVar("fintrak_envname", "").ToUpper() == "LOCALHOST")
 {
 	app.UseSwagger();
 	app.UseSwaggerUI();

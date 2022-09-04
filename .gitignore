@@ -1,2 +1,5 @@
 # visual studio stuff
 .vscode/
+
+# environment
+.env

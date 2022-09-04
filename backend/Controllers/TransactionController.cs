@@ -8,23 +8,30 @@ namespace fintrak.Controllers
 	[Route("transactions")]
 	public class TransactionController : ControllerBase
 	{
-		private readonly BaseDbProvider _dbProvider;
+		private readonly TransactionDbProvider _dbProvider;
 
-		public TransactionController(BaseDbProvider db)
+		public TransactionController(TransactionDbProvider db)
 		{
 			this._dbProvider = db;
 		}
 
 		[HttpPost("")]
-		public IActionResult PostTransaction([FromBody] Transaction model)
+		public async Task<IActionResult> PostTransaction([FromBody] Transaction model)
 		{
-			return Ok(this._dbProvider.SaveNewTransaction(model));
+			var result = await this._dbProvider.SaveNewTransaction(model);
+			return Ok(result);
 		}
 
 		[HttpPatch("")]
-		public IActionResult ChangeTransaction([FromBody] Transaction model)
+		public async Task<IActionResult> ChangeTransaction([FromBody] Transaction model)
 		{
-			return Ok(this._dbProvider.ChangeTransaction(model));
+			return Ok(await this._dbProvider.ChangeTransaction(model));
+		}
+
+		[HttpDelete("")]
+		public async Task<IActionResult> DeleteTransaction([FromBody] Transaction model)
+		{
+			return Ok(await this._dbProvider.DeleteTransaction(model));
 		}
 	}
 }

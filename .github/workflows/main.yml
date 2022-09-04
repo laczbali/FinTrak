@@ -10,18 +10,18 @@ on:
   workflow_dispatch:
 
 jobs:
-  # build the .NET backend
+  # build the backend
   deploy-backend:
     env:
       # vars needed to upload lambda function
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_LAMBDA_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_LAMBDA_SECRET_KEY }}
-      # vars needed to updated RDS database
-      fintrak_dbserver: ${{ secrets.AWS_DB_HOST }}
-      fintrak_dbuser: ${{ secrets.AWS_DB_USER }}
-      fintrak_dbpassword: ${{ secrets.AWS_DB_PASSWORD }}
       # used for auth
       fintrak_token: ${{ secrets.FINTRAK_TOKEN }}
+      # user for db access
+      fintrak_dbtablename: ${{ secrets.AWS_DYNAMO_TABLE_NAME }}
+      fintrak_dynamoaccess: ${{ secrets.AWS_DYNAMO_ACCESS_KEY_ID }}
+      fintrak_dynamosecret: ${{ secrets.AWS_DYNAMO_SECRET_KEY }}
   
     runs-on: ubuntu-latest
 
@@ -46,13 +46,13 @@ jobs:
           
       - name: Update Lambda env vars
         working-directory: ./backend/bin/publish
-        run: aws lambda update-function-configuration --function-name FintrakBackend --region us-east-1 --environment "Variables={fintrak_envname=LAMBDA,fintrak_token=$fintrak_token,fintrak_dbserver=$fintrak_dbserver,fintrak_dbuser=$fintrak_dbuser,fintrak_dbpassword=$fintrak_dbpassword}"
+        run: aws lambda update-function-configuration --function-name FintrakBackend --region us-east-1 --environment "Variables={fintrak_envname=LAMBDA,fintrak_token=$fintrak_token},fintrak_dbtablename=$fintrak_dbtablename},fintrak_dynamoaccess=$fintrak_dynamoaccess},fintrak_dynamosecret=$fintrak_dynamosecret}"
 
       - name: Upload zip to Lambda
         working-directory: ./backend/bin/publish
         run: aws lambda update-function-code --function-name FintrakBackend --zip-file fileb://backend.zip --region us-east-1
           
-  # build the svelte frontend
+  # build the frontend
   deploy-frontend:
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_ACCESS_KEY_ID }}
