@@ -8,30 +8,29 @@ namespace fintrak.Controllers
 	[Route("categories")]
 	public class CategoryController : ControllerBase
 	{
-		private readonly BaseDbProvider _dbProvider;
+		private readonly TransactionDbProvider _dbProvider;
 
-		public CategoryController(BaseDbProvider dbProvider)
+		public CategoryController(TransactionDbProvider dbProvider)
 		{
 			this._dbProvider = dbProvider;
 		}
 
 		[HttpGet("")]
-		public IActionResult GetAllCategories()
+		public async Task<IActionResult> GetAllCategories()
 		{
-			return Ok(_dbProvider.GetAllCategories());
+			return Ok(await _dbProvider.GetAllCategories());
 		}
 
-		[HttpPost("")]
-		public IActionResult CreateNew([FromBody] TransactionCategory model)
+		[HttpPost("{name}")]
+		public async Task<IActionResult> CreateNew(string name)
 		{
-			return Ok(this._dbProvider.NewTransactionCategory(model));
+			return Ok(await this._dbProvider.NewTransactionCategory(name));
 		}
 
 		[HttpDelete("{name}")]
-		public IActionResult Delete(string name)
+		public async Task<IActionResult> Delete(string name)
 		{
-			this._dbProvider.RemoveTransactionCategory(name);
-			return Ok();
+			return Ok(await this._dbProvider.RemoveTransactionCategory(name));
 		}
 	}
 }

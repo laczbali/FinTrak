@@ -1,16 +1,22 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace fintrak.Data.Models
 {
-	[Table("user_queries")]
 	public class UserQuery
 	{
-		[Required]
-		[Key]
-		public string? Name { get; set; }
+		[JsonPropertyName("pk")]
+		public string Pk => $"USERQUERY@{Name}";
+
+		[JsonPropertyName("sk")]
+		public string Sk => Pk;
 
 		[Required]
-		public string? QueryJson { get; set; }
+		[JsonPropertyName("name")]
+		public string Name { get; set; } = string.Empty;
+
+		[Required]
+		[JsonPropertyName("queryJson")]
+		public string QueryJson { get; set; } = string.Empty;
 	}
 }

@@ -1,25 +1,32 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using fintrak.Helpers;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace fintrak.Data.Models
 {
-	 [Table("transactions")]
 	public class Transaction
 	{
-		public int Id { get; set; }
+		[JsonPropertyName("pk")]
+		public string Pk => $"TRANSACTION@{Id}";
+
+		[JsonPropertyName("sk")]
+		public string Sk => Pk;
+
+		[JsonPropertyName("id")]
+		public string Id { get; set; } = string.Empty;
 
 		[Required]
+		[JsonPropertyName("amount")]
 		public float? Amount { get; set; }
 
-		public DateTime Timestamp { get; set; }
-
 		[Required]
+		[JsonPropertyName("description")]
 		public string? Description { get; set; }
 
-		[JsonIgnore]
-		[ForeignKey("Category")]
-		public string? CategoryName { get; set; }
-		public TransactionCategory? Category { get; set; }
+		[JsonPropertyName("creationTime")]
+		public DateTime? CreationTime { get; set; }
+
+		[JsonPropertyName("category")]
+		public string? Category { get; set; }
 	}
 }
