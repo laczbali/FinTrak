@@ -39,13 +39,6 @@ jobs:
         run: |
           dotnet publish --output "./bin/publish" --configuration "Release" --framework "net6.0" /p:GenerateRuntimeConfigurationFiles=true --runtime linux-x64 --self-contained false
         
-      - name: Update database
-        working-directory: ./backend
-        run: |
-          dotnet tool install --global dotnet-ef
-          dotnet tool restore
-          dotnet ef database update
-        
       # deploy to lambda
       - name: Zip backend
         working-directory: ./backend/bin/publish

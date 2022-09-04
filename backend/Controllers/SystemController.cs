@@ -1,7 +1,6 @@
 using fintrak.Data;
 using fintrak.Data.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace fintrak.Controllers;
 

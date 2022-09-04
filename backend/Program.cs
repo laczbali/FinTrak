@@ -1,9 +1,9 @@
 using fintrak.Data;
-using Microsoft.EntityFrameworkCore;
 using fintrak.Middleware;
 using fintrak.Helpers;
 using System.Reflection;
 using fintrak.Data.Providers;
+using Amazon.DynamoDBv2;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,9 +22,10 @@ string EnvVar(string key, string defaultValue) => builder?.Configuration.GetValu
 
 // Configure services
 builder.Services.AddControllers();
-builder.Services.AddTransient<BaseDbProvider>();
-builder.Services.AddTransient<ReportDbProvider>();
-builder.Services.AddTransient<EnvHelper>();
+builder.Services.AddSingleton<IAmazonDynamoDB>();
+builder.Services.AddSingleton<BaseDbProvider>();
+builder.Services.AddSingleton<ReportDbProvider>();
+builder.Services.AddSingleton<EnvHelper>();
 
 // Configure Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -39,23 +40,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddAWSLambdaHosting(LambdaEventSource.HttpApi);
 
 // Cofigure DB
-string dbServer = EnvVar("fintrak_dbserver", "localhost");
-string dbUser = EnvVar("fintrak_dbuser", "root");
-string dbPassword = EnvVar("fintrak_dbpassword", "rozsomak");
 
-var connectionString = $"Server={dbServer};Port=3306;Database=fintrak;User={dbUser};Password={dbPassword};";
-builder.Services.AddDbContext<AppDbContext>(options =>
-{
-	try
-	{
-		options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
-	}
-	catch(Exception)
-	{
-		// TODO: generate descriptive log, so if this fails on Lambda we can know
-		throw;
-	}
-});
 
 // Build app
 var app = builder.Build();
