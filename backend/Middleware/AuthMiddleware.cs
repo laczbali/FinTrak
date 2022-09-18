@@ -24,39 +24,32 @@ namespace fintrak.Middleware
 		public async Task InvokeAsync(HttpContext context)
 		{
 			// no auth needed for root endpoint
-			// no auth for login
 			// no auth needed for localhost
-			if (context.Request.Path == "/"
-				|| context.Request.Path == "/auth/login"
-				|| this._envHelper.Config.CurrentEnvironment == EnvHelper.Environments.LOCALHOST)
+			if (context.Request.Path == "/" || this._envHelper.Config.CurrentEnvironment == EnvHelper.Environments.LOCALHOST)
 			{
 				await this._next(context);
 				return;
 			}
 
-			var requestIsValid = false;
-
 			context.Request.Headers.TryGetValue("Authorization", out var authHeader);
+
 			var authToken = authHeader.ToString().Replace("Bearer ", "");
-			if (authToken != null)
+			if (authToken == null || authToken == "")
 			{
-				requestIsValid = requestIsValid || IsTokenValid(authToken);
+				// no token was provided
+				context.Response.StatusCode = 401;
+				return;
 			}
 
-			var authCookie = context.Request.Cookies.FirstOrDefault(x => x.Key == "Auth");
-			if(authCookie.Key != null)
+			// check if the token is valid
+			if (!IsTokenValid(authToken))
 			{
-				requestIsValid = requestIsValid || IsTokenValid(authCookie.Value);
+				context.Response.StatusCode = 401;
+				return;
 			}
 
-			if(requestIsValid)
-			{
-				// Call the next delegate/middleware in the pipeline.
-				await this._next(context);
-			}
-
-			context.Response.StatusCode = 401;
-			return;
+			// Call the next delegate/middleware in the pipeline.
+			await this._next(context);
 		}
 
 		private bool IsTokenValid(string token)
