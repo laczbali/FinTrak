@@ -46,9 +46,15 @@ public class SystemController : ControllerBase
     [HttpGet("auth/renew")]
     public async Task<IActionResult> Renew()
     {
-        // get session by id
-        // set new expiration for session
-        // send back updated cookie
-        throw new NotImplementedException();
+        var sessionId = Request.Cookies.FirstOrDefault(x => x.Key == "Auth").Value;
+        if(sessionId == null)
+        {
+            Response.Cookies.Delete("Auth");
+            return BadRequest("Invalid cookie");
+        }
+
+        (var sessionToken, var sessionExpiry) = await this._dbProvider.RenewSession(sessionId);
+        Response.Cookies.Append("Auth", sessionToken, new CookieOptions { Expires = sessionExpiry });
+        return Ok();
     }
 }

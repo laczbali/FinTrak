@@ -1,4 +1,5 @@
-﻿using fintrak.Helpers;
+﻿using fintrak.Data.Providers;
+using fintrak.Helpers;
 
 namespace fintrak.Middleware
 {
@@ -6,15 +7,17 @@ namespace fintrak.Middleware
 	{
 		private readonly RequestDelegate _next;
 		private readonly EnvHelper _envHelper;
+        private readonly SystemDbProvider _dbProvider;
 
 		/// <summary>
 		/// Called by app, at startup
 		/// </summary>
-		public AuthMiddleware(RequestDelegate next, EnvHelper envHelper)
+		public AuthMiddleware(RequestDelegate next, EnvHelper envHelper, SystemDbProvider dbProvider)
 		{
 			this._next = next;
 			this._envHelper = envHelper;
-		}
+            this._dbProvider = dbProvider;
+        }
 
 		/// <summary>
 		/// Checks that the request has a Berarer token, that matches the configured token
@@ -46,16 +49,19 @@ namespace fintrak.Middleware
 			var authCookie = context.Request.Cookies.FirstOrDefault(x => x.Key == "Auth");
 			if(authCookie.Key != null)
 			{
-				requestIsValid = requestIsValid || IsTokenValid(authCookie.Value);
+				var sessionOK = await this._dbProvider.IsSessionValid(authCookie.Value);
+				requestIsValid = requestIsValid || sessionOK;
 			}
 
 			if(requestIsValid)
 			{
 				// Call the next delegate/middleware in the pipeline.
 				await this._next(context);
+				return;
 			}
 
 			context.Response.StatusCode = 401;
+			context.Response.Cookies.Delete("Auth");
 			return;
 		}
 

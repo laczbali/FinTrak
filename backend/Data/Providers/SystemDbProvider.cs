@@ -20,8 +20,13 @@ namespace fintrak.Data.Providers
 
         public async Task<(string, DateTime)> NewSession()
         {
+            return await this.RenewSession(Guid.NewGuid().ToString());
+        }
+
+        public async Task<(string, DateTime)> RenewSession(string sessionId)
+        {
             var model = new Session();
-            model.Guid = Guid.NewGuid().ToString();
+            model.Guid = sessionId;
             model.Expires = DateTime.Now.AddDays(1);
 
             var createRequest = new PutItemRequest
@@ -53,24 +58,27 @@ namespace fintrak.Data.Providers
             if (response.HttpStatusCode != HttpStatusCode.OK)
                 throw new Exception("Failed to query session");
 
-            return response.Item.Count != 0;
+            var session = this._dbHelper.ItemToModel<Session>(response.Item);
+            if(session == null) return false;
+
+            return session.Expires > DateTime.Now;
         }
 
         public async void ClearSession(string sessionId)
         {
-			var deleteRequest = new DeleteItemRequest
-			{
-				TableName = this._dbHelper.DbTableName,
-				Key = new Dictionary<string, AttributeValue>
-				{
-					{"pk", new AttributeValue{ S = $"SESSION@{sessionId}" } },
-					{"sk", new AttributeValue{ S = $"SESSION@{sessionId}" } }
-				}
-			};
+            var deleteRequest = new DeleteItemRequest
+            {
+                TableName = this._dbHelper.DbTableName,
+                Key = new Dictionary<string, AttributeValue>
+                {
+                    {"pk", new AttributeValue{ S = $"SESSION@{sessionId}" } },
+                    {"sk", new AttributeValue{ S = $"SESSION@{sessionId}" } }
+                }
+            };
 
-			var response = await this._dynamoDB.DeleteItemAsync(deleteRequest);
-			if (response.HttpStatusCode != HttpStatusCode.OK)
-				throw new Exception("Failed to delete transaction");
+            var response = await this._dynamoDB.DeleteItemAsync(deleteRequest);
+            if (response.HttpStatusCode != HttpStatusCode.OK)
+                throw new Exception("Failed to delete transaction");
         }
 
         public async void ClearSessions()

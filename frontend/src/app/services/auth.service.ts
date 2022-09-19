@@ -11,12 +11,12 @@ export class AuthService {
         // TODO auth validation
         // if we don't have a session cookie, return false
         // if we have a session cookie, send a validation request to the backend (auth/renew)
-        return false;
+        return true;
     }
 
     public login(password: string): Observable<boolean> {
         // TODO get URL from env
-        return this.http.post("https://localhost:59742/auth/login", `"${password}"`, { headers: { 'Content-Type': 'application/json' } })
+        return this.http.post("https://localhost:54966/auth/login", `"${password}"`, { headers: { 'Content-Type': 'application/json' } })
             .pipe(
                 map(
                     resp => {
