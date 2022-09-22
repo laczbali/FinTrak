@@ -1,34 +1,50 @@
-import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { catchError, map, Observable, of, tap } from "rxjs";
+import { HelperService } from "./helper.service";
 
 @Injectable({ providedIn: "root" })
 export class AuthService {
 
-    constructor(private http: HttpClient) { }
+    constructor(
+        private helper: HelperService
+    ) { }
 
-    public get isLoggedIn(): boolean {
-        // TODO auth validation
-        // if we don't have a session cookie, return false
-        // if we have a session cookie, send a validation request to the backend (auth/renew)
-        return true;
+    /** Will be true, if we already checked in with the backend during this session */
+    private haveSession = false;
+
+    /**
+     * Checks if we have a valid active session with the backend.
+     * @returns True if we do, False if we need to log in.
+     */
+    public async isLoggedIn(): Promise<boolean> {
+        // we already checked in, no need to make a request
+        if (this.haveSession) return true;
+
+        // check in with the backend. This will also renew the session cookie
+        return await this.helper.makeApiGetRequest<boolean>(
+            "auth/renew",
+            () => {
+                this.haveSession = true;
+                return true;
+            },
+            () => { return false; }
+        );
     }
 
-    public login(password: string): Observable<boolean> {
-        // TODO get URL from env
-        return this.http.post("https://localhost:54966/auth/login", `"${password}"`, { headers: { 'Content-Type': 'application/json' } })
-            .pipe(
-                map(
-                    resp => {
-                        return true;
-                    }
-                ),
-                catchError(
-                    resp => {
-                        return of(false);
-                    }
-                )
-            );
+    /**
+     * Logs in to the backend. Should receive a session cookie.
+     * @param password 
+     * @returns True if the response was 200 OK, False otherwise.
+     */
+    public async login(password: string): Promise<boolean> {
+        return await this.helper.makeApiPostRequest<boolean>(
+            "auth/login",
+            `"${password}"`,
+            () => {
+                this.haveSession = true;
+                return true;
+            },
+            () => { return false; }
+        )
     }
 
 }

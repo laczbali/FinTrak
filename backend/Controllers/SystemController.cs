@@ -31,7 +31,7 @@ public class SystemController : ControllerBase
             return Unauthorized();
 
         (var sessionToken, var sessionExpiry) = await this._dbProvider.NewSession();
-        Response.Cookies.Append("Auth", sessionToken, new CookieOptions { Expires = sessionExpiry });
+        Response.Cookies.Append("Auth", sessionToken, new CookieOptions { Expires = sessionExpiry, SameSite = SameSiteMode.None, Secure = true });
         return Ok();
     }
 
@@ -54,7 +54,7 @@ public class SystemController : ControllerBase
         }
 
         (var sessionToken, var sessionExpiry) = await this._dbProvider.RenewSession(sessionId);
-        Response.Cookies.Append("Auth", sessionToken, new CookieOptions { Expires = sessionExpiry });
+        Response.Cookies.Append("Auth", sessionToken, new CookieOptions { Expires = sessionExpiry, SameSite = SameSiteMode.None, Secure = true });
         return Ok();
     }
 }

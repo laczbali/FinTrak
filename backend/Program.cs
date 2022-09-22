@@ -51,18 +51,22 @@ builder.Services.AddAWSLambdaHosting(LambdaEventSource.HttpApi);
 
 // Build app
 var app = builder.Build();
+
+// Configure middleware pipeline
+app.UseCors(x =>
+    x.WithOrigins("http://localhost:4200", "https://fintrak.blaczko.com")
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .AllowCredentials());
+app.UseHttpsRedirection();
+app.UseAuth();
+app.MapControllers();
+
 if (EnvVar("fintrak_envname", "").ToUpper() == "LOCALHOST")
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-// Configure middleware pipeline
-app.UseHttpsRedirection();
-app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-app.UseAuth();
-app.UseAuthorization();
-app.MapControllers();
 
 // Start app
 app.Run();

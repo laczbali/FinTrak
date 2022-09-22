@@ -49,11 +49,12 @@ export class LoginComponent implements OnInit {
 
     this.queryRunning = true;
     this.loginOk = true;
-    this.loginOk = await firstValueFrom(this.auth.login(this.password));
-    this.queryRunning = false;
-
+    this.loginOk = await this.auth.login(this.password);
+    
     if(this.loginOk) {
       this.router.navigate(['/']);
+    } else {
+      this.queryRunning = false;
     }
   }
 
