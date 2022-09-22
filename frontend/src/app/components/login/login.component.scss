@@ -1,0 +1,30 @@
+.main-row {
+    height: 100vh;
+}
+
+.main-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+input {
+    border-radius: 30px;
+    text-align: center;
+}
+
+.login-error {
+    font-size: 75%;
+    position: relative;
+    width: 100%;
+    z-index: -1;
+}
+
+.login-error div {
+    position: absolute;
+    min-width: max-content;
+    left: 0;
+    right: 0;
+    text-align: center;
+}

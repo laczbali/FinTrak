@@ -1,4 +1,5 @@
-﻿using fintrak.Helpers;
+﻿using fintrak.Data.Providers;
+using fintrak.Helpers;
 
 namespace fintrak.Middleware
 {
@@ -6,15 +7,17 @@ namespace fintrak.Middleware
 	{
 		private readonly RequestDelegate _next;
 		private readonly EnvHelper _envHelper;
+        private readonly SystemDbProvider _dbProvider;
 
 		/// <summary>
 		/// Called by app, at startup
 		/// </summary>
-		public AuthMiddleware(RequestDelegate next, EnvHelper envHelper)
+		public AuthMiddleware(RequestDelegate next, EnvHelper envHelper, SystemDbProvider dbProvider)
 		{
 			this._next = next;
 			this._envHelper = envHelper;
-		}
+            this._dbProvider = dbProvider;
+        }
 
 		/// <summary>
 		/// Checks that the request has a Berarer token, that matches the configured token
@@ -24,32 +27,42 @@ namespace fintrak.Middleware
 		public async Task InvokeAsync(HttpContext context)
 		{
 			// no auth needed for root endpoint
+			// no auth for login
 			// no auth needed for localhost
-			if (context.Request.Path == "/" || this._envHelper.Config.CurrentEnvironment == EnvHelper.Environments.LOCALHOST)
+			if (context.Request.Path == "/"
+				|| context.Request.Path == "/auth/login"
+				|| this._envHelper.Config.CurrentEnvironment == EnvHelper.Environments.LOCALHOST)
 			{
 				await this._next(context);
 				return;
 			}
 
+			var requestIsValid = false;
+
 			context.Request.Headers.TryGetValue("Authorization", out var authHeader);
-
 			var authToken = authHeader.ToString().Replace("Bearer ", "");
-			if (authToken == null || authToken == "")
+			if (authToken != null)
 			{
-				// no token was provided
-				context.Response.StatusCode = 401;
+				requestIsValid = requestIsValid || IsTokenValid(authToken);
+			}
+
+			var authCookie = context.Request.Cookies.FirstOrDefault(x => x.Key == "Auth");
+			if(authCookie.Key != null)
+			{
+				var sessionOK = await this._dbProvider.IsSessionValid(authCookie.Value);
+				requestIsValid = requestIsValid || sessionOK;
+			}
+
+			if(requestIsValid)
+			{
+				// Call the next delegate/middleware in the pipeline.
+				await this._next(context);
 				return;
 			}
 
-			// check if the token is valid
-			if (!IsTokenValid(authToken))
-			{
-				context.Response.StatusCode = 401;
-				return;
-			}
-
-			// Call the next delegate/middleware in the pipeline.
-			await this._next(context);
+			context.Response.StatusCode = 401;
+			context.Response.Cookies.Delete("Auth");
+			return;
 		}
 
 		private bool IsTokenValid(string token)

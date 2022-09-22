@@ -1,0 +1,21 @@
+<div class="container">
+  <div class="row main-row">
+    <div class="col main-col">
+
+      <div>
+        <label for="login-password">Password</label>
+      </div>
+
+      <div>
+        <input type="password" name="login-password" id="" (keyup)="login($event)" [(ngModel)]="password" [disabled]="queryRunning">
+      </div>
+
+      <div class="login-error text-danger" [@openClose]="loginOk ? 'closed' : 'open'">
+        <div>
+          Login Failed
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
