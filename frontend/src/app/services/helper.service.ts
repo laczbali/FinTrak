@@ -25,7 +25,7 @@ export class HelperService {
     data: any,
     okCallback: (response: any) => Type,
     failCallback: (response: any) => Type
-  ) : Promise<Type> {
+  ): Promise<Type> {
 
     let baseUrl = environment.apiUrl;
     let request = this.http.post(
@@ -50,7 +50,7 @@ export class HelperService {
     return firstValueFrom(request);
   }
 
-    /**
+  /**
    * Sends a GET request to the API. Runs the provided callbacks on the result.
    * 
    * Use as: await makeApiPostRequest(..PARAMS..);
@@ -59,31 +59,31 @@ export class HelperService {
    * @param failCallback 
    * @returns The result of the provided callback, of the provided Type, as an awaitable Promise
    */
-     public makeApiGetRequest<Type>(
-      endpoint: string,
-      okCallback: (response: any) => Type,
-      failCallback: (response: any) => Type
-    ) : Promise<Type> {
-  
-      let baseUrl = environment.apiUrl;
-      let request = this.http.get(
-        baseUrl + endpoint,
-        {
-          withCredentials: true
+  public makeApiGetRequest<Type>(
+    endpoint: string,
+    okCallback: (response: any) => Type,
+    failCallback: (response: any) => Type
+  ): Promise<Type> {
+
+    let baseUrl = environment.apiUrl;
+    let request = this.http.get(
+      baseUrl + endpoint,
+      {
+        withCredentials: true
+      }
+    ).pipe(
+      map<any, Type>(
+        resp => okCallback(resp)
+      ),
+      catchError<any, Observable<Type>>(
+        resp => {
+          var callbackResult = failCallback(resp);
+          return of(callbackResult);
         }
-      ).pipe(
-        map<any, Type>(
-          resp => okCallback(resp)
-        ),
-        catchError<any, Observable<Type>>(
-          resp => {
-            var callbackResult = failCallback(resp);
-            return of(callbackResult);
-          }
-        )
-      );
-  
-      return firstValueFrom(request);
-    }
+      )
+    );
+
+    return firstValueFrom(request);
+  }
 
 }

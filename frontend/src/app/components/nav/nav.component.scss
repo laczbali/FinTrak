@@ -1,0 +1,29 @@
+@use '/src/const.scss' as *;
+
+.router-container {
+    display: flex;
+}
+
+// router links
+
+.router-link {
+    cursor: pointer;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+    padding-left: .5rem;
+    padding-right: .5rem;
+    color: $font-highlight-color;
+    transition: all 0.1s;
+}
+
+.router-link:hover {
+    color: $font-muted-color;
+}
+
+.router-link-active {
+    background-color: $font-muted-color;
+}
+
+.router-link-active:hover {
+    color: $font-base-color;
+}
