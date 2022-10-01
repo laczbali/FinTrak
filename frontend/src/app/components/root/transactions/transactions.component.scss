@@ -1,0 +1,6 @@
+@use '/src/const.scss' as *;
+
+.main {
+    display: flex;
+    height: $content-height;
+}

@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+
 @use '/src/const.scss' as *;
 
 body {
@@ -6,6 +7,8 @@ body {
     background-color: $background-color;
     color: $font-base-color;
 }
+
+// scrollbar
 
 ::-webkit-scrollbar {
     width: 12px;
@@ -20,7 +23,15 @@ body {
     padding: 3px;
 }
 
+// panel
+
 .panel {
     border: 1px solid $font-muted-color;
     margin: -1px;
+    width: -webkit-fill-available;
+
+    // dont have separators on bottom & right (avoids horizontal scrollbars)
+    border-right: 0;
+    border-bottom: 0;
+    margin-right: 0;
 }
