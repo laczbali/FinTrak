@@ -3,6 +3,7 @@ using Amazon.DynamoDBv2.Model;
 using fintrak.Data.Models;
 using fintrak.Helpers;
 using System.Net;
+using System.Text.Json;
 
 namespace fintrak.Data.Providers
 {
@@ -39,6 +40,8 @@ namespace fintrak.Data.Providers
             if (response.HttpStatusCode != HttpStatusCode.OK)
                 throw new Exception("Failed to create session");
 
+            _ = Task.Run(() => ClearStaleSessions());
+
             return (model.Guid, model.Expires);
         }
 
@@ -59,7 +62,7 @@ namespace fintrak.Data.Providers
                 throw new Exception("Failed to query session");
 
             var session = this._dbHelper.ItemToModel<Session>(response.Item);
-            if(session == null) return false;
+            if (session == null) return false;
 
             return session.Expires > DateTime.Now;
         }
@@ -101,6 +104,32 @@ namespace fintrak.Data.Providers
             {
                 var session = this._dbHelper.ItemToModel<Session>(item);
 
+                if (session != null)
+                    this.ClearSession(session.Guid);
+            }
+        }
+
+        public async void ClearStaleSessions()
+        {
+            var filterExpression = "contains (pk, :id_prefix)";
+            var filterValues = new Dictionary<string, AttributeValue> { { ":id_prefix", new AttributeValue { S = "SESSION@" } } };
+
+            filterExpression += " and expires < :expiry_date";
+            var dateNowString = JsonSerializer.Serialize(DateTime.Now);
+            dateNowString = dateNowString.Substring(1, dateNowString.Length - 2);
+            filterValues.Add(":expiry_date", new AttributeValue { S = dateNowString });
+
+            var scanRequest = new ScanRequest
+            {
+                TableName = this._dbHelper.DbTableName,
+                FilterExpression = filterExpression,
+                ExpressionAttributeValues = filterValues
+            };
+
+            var response = await this._dynamoDB.ScanAsync(scanRequest);
+            foreach (var item in response.Items)
+            {
+                var session = this._dbHelper.ItemToModel<Session>(item);
                 if (session != null)
                     this.ClearSession(session.Guid);
             }
