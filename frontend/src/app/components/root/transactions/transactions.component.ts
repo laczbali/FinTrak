@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { QueryService } from 'src/app/services/query.service';
 
 @Component({
   selector: 'app-transactions',
@@ -7,9 +8,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TransactionsComponent implements OnInit {
 
-  constructor() { }
+  constructor(private query: QueryService) { }
+
+  public categories: string[] = [];
 
   ngOnInit() {
+    this.getCategories();
+  }
+
+  private async getCategories() {
+    this.categories = await this.query.allCategories();
+    // ["none", "salary", "housing", "vacation", "something", "placeholder", "mycategory", "useful", "debug", "food", "hobby"]
   }
 
 }

@@ -6,16 +6,86 @@
 
   <div class="panel other">
 
+    <!-- Categories -->
     <div class="panel categories">
-      categories
+      <div class="panel-header">
+        Categories
+      </div>
+
+      <div class="category-container">
+        <div class="category-item" *ngFor="let cat of categories">
+          {{cat}}
+        </div>
+      </div>
+
     </div>
 
+    <!-- Filters -->
     <div class="panel filters">
-      filters
+      <div class="panel-header">
+        Filtering
+      </div>
+      <div style="padding-left: 0.5rem; padding-right: 0.5rem;">
+
+        <div>
+          Contains Text
+        </div>
+
+        <div>
+          In Category
+        </div>
+
+        <div>
+          Larger Than
+        </div>
+
+        <div>
+          Smaller Than
+        </div>
+
+        <div>
+          Before
+        </div>
+
+        <div>
+          After
+        </div>
+
+      </div>
     </div>
 
+    <!-- Item editing & adding -->
     <div class="panel edit">
-      editing
+      <div class="panel-header">
+        Add & Edit
+      </div>
+      <div style="padding-left: 0.5rem; padding-right: 0.5rem;">
+
+        <div>
+          <label for="item-date">Transaction Date</label>
+          <input class="form-control" type="date" name="" id="item-date">
+        </div>
+
+        <div>
+          <label for="item-amount">Amount</label>
+          <input class="form-control" type="number" name="" id="item-amount">
+        </div>
+
+        <div>
+          <label for="item-description">Description</label>
+          <input class="form-control" type="text" name="" id="item-description">
+        </div>
+
+        <div>
+          <label for="item-category">Category</label>
+          <select class="form-control" name="" id="item-category">
+            <option *ngFor="let cat of categories" value="{{cat}}">
+              {{cat}}
+            </option>
+          </select>
+        </div>
+
+      </div>
     </div>
 
   </div>

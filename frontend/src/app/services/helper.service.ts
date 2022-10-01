@@ -13,7 +13,7 @@ export class HelperService {
   /**
    * Sends a POST request to the API. Runs the provided callbacks on the result.
    * 
-   * Use as: await makeApiPostRequest(..PARAMS..);
+   * Use as: await makeApiPostRequest<ReturnType>(..PARAMS..);
    * @param endpoint Base API URL is not needed. Use as "controller/action"
    * @param data POST request body
    * @param okCallback 
@@ -53,7 +53,7 @@ export class HelperService {
   /**
    * Sends a GET request to the API. Runs the provided callbacks on the result.
    * 
-   * Use as: await makeApiPostRequest(..PARAMS..);
+   * Use as: await makeApiPostRequest<ReturnType>(..PARAMS..);
    * @param endpoint Base API URL is not needed. Use as "controller/action"
    * @param okCallback 
    * @param failCallback 

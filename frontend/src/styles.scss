@@ -35,3 +35,9 @@ body {
     border-bottom: 0;
     margin-right: 0;
 }
+
+.panel-header {
+    width: -webkit-fill-available;
+    background-color: $font-muted-color;
+    padding-left: 0.5rem;
+}
