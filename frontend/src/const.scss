@@ -4,4 +4,4 @@ $font-muted-color: rgb(101, 101, 101);
 $background-color: rgb(37, 37, 37);
 
 $navbar-height: 2.5rem;
-$content-height: calc(calc(100vh - $navbar-height) - 2px); // takes into account the borders
+$content-height: calc(calc(100vh - $navbar-height) - 4px); // takes into account the borders, nav offset
