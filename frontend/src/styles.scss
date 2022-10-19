@@ -3,9 +3,17 @@
 @use '/src/const.scss' as *;
 
 body {
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: $background-color;
     color: $font-base-color;
+    overflow: hidden;
+}
+
+// general layout
+
+.main {
+    display: flex;
+    height: $content-height;
 }
 
 // scrollbar
@@ -13,10 +21,12 @@ body {
 ::-webkit-scrollbar {
     width: 12px;
 }
+
 ::-webkit-scrollbar-track {
     background: $background-color;
     border-radius: 20px;
 }
+
 ::-webkit-scrollbar-thumb {
     background-color: $font-muted-color;
     border-radius: 20px;
@@ -27,13 +37,14 @@ body {
 
 .panel {
     width: -webkit-fill-available;
+    display: flex;
+    flex-direction: column;
+    float: none;
 
     // tile effect
-    float: none;
-    display: inline-block;
     box-shadow:
-        inset 1px 1px 1px 1px rgba(255,255,255, .15),
-        inset -1px -1px 1px 1px rgba(0,0,0, .26);
+        inset 1px 1px 1px 1px rgba(255, 255, 255, .15),
+        inset -1px -1px 1px 1px rgba(0, 0, 0, .26);
     margin: 0.5px;
     border: 1px solid rgba(0, 0, 0, 0);
     border-right: 0;
@@ -42,6 +53,18 @@ body {
 
 .panel-header {
     width: -webkit-fill-available;
-    background-color: $font-muted-color;
+    background-color: rgba(128, 128, 128, .15);
     padding-left: 0.5rem;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    font-weight: 700;
+}
+
+.panel-content {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.panel:last-of-type {
+    flex-grow: 1;
 }
