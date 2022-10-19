@@ -26,14 +26,18 @@ body {
 // panel
 
 .panel {
-    border: 1px solid $font-muted-color;
-    margin: -1px;
     width: -webkit-fill-available;
 
-    // dont have separators on bottom & right (avoids horizontal scrollbars)
+    // tile effect
+    float: none;
+    display: inline-block;
+    box-shadow:
+        inset 1px 1px 1px 1px rgba(255,255,255, .15),
+        inset -1px -1px 1px 1px rgba(0,0,0, .26);
+    margin: 0.5px;
+    border: 1px solid rgba(0, 0, 0, 0);
     border-right: 0;
     border-bottom: 0;
-    margin-right: 0;
 }
 
 .panel-header {
