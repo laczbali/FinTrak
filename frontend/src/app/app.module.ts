@@ -13,6 +13,7 @@ import { TransactionsComponent } from './components/root/transactions/transactio
 import { ReportsComponent } from './components/root/reports/reports.component';
 import { GraphsComponent } from './components/root/graphs/graphs.component';
 import { StatsComponent } from './components/root/stats/stats.component';
+import { FormatNumberPipe } from './pipes/format-number.pipe';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { StatsComponent } from './components/root/stats/stats.component';
     TransactionsComponent,
     ReportsComponent,
     GraphsComponent,
-    StatsComponent
+    StatsComponent,
+    FormatNumberPipe
   ],
   imports: [
     BrowserModule,

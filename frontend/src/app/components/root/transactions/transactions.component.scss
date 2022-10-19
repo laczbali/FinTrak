@@ -1,11 +1,41 @@
 @use '/src/const.scss' as *;
 
-.main {
+// transaction list
+
+.transaction-item {
     display: flex;
-    height: $content-height;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+
+    cursor: pointer;
+    transition: all 0.1s;
+    border-bottom: 1px solid $font-muted-color;
 }
 
-// category
+.transaction-item:hover {
+    background-color: $font-muted-color;
+}
+
+.transaction-col {
+    display: flex;
+    flex-basis: 90px;
+    flex-grow: 0;
+    flex-shrink: 0;
+
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.transaction-col-desc {
+    flex-grow: 1;
+}
+
+.transaction-col div {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+// sidebar
 
 .category-container {
     display: flex;

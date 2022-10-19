@@ -1,8 +1,36 @@
 <div class="main">
 
   <div class="panel">
-    transaction list
+    <div class="transaction-item" *ngFor="let item of transactions">
+      
+      <div class="transaction-col transaction-col-date">
+        <div>
+          {{item.creationTime | date:'YYYY-MM-dd' }}
+        </div>
+      </div>
+
+      <div class="transaction-col transaction-col-amount">
+        <div>
+          {{item.amount | formatNumber}}
+        </div>
+      </div>
+
+      <div class="transaction-col transaction-col-desc">
+        <div>
+          {{item.description}}
+        </div>
+      </div>
+
+      <div class="transaction-col transaction-col-cat">
+        <div>
+          {{item.category}}
+        </div>
+      </div>
+
+    </div>
   </div>
+
+  <!-- -------------------------------------------- -->
 
   <div class="panel other">
 
@@ -11,7 +39,7 @@
         SUM Amount
       </div>
 
-      <div style="padding-left: 0.5rem; padding-right: 0.5rem;">
+      <div class="panel-content">
         1 234 456
       </div>
     </div>
@@ -33,16 +61,12 @@
     <!-- Filters -->
     <div class="panel filters">
       <div class="panel-header">
-        Filtering
+        Advanced Filtering
       </div>
-      <div style="padding-left: 0.5rem; padding-right: 0.5rem;">
+      <div class="panel-content">
 
         <div>
           Contains Text
-        </div>
-
-        <div>
-          In Category
         </div>
 
         <div>
@@ -69,7 +93,7 @@
       <div class="panel-header">
         Add & Edit
       </div>
-      <div style="padding-left: 0.5rem; padding-right: 0.5rem;">
+      <div class="panel-content">
 
         <div>
           <label for="item-date">Transaction Date</label>
