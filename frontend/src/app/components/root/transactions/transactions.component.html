@@ -1,8 +1,8 @@
 <div class="main">
 
-  <div class="panel">
-    <div class="transaction-item" *ngFor="let item of transactions">
-      
+  <div class="panel list-panel">
+    <div class="transaction-item" *ngFor="let item of transactions" (click)="openForEdit(item.id)">
+
       <div class="transaction-col transaction-col-date">
         <div>
           {{item.creationTime | date:'YYYY-MM-dd' }}
@@ -97,17 +97,20 @@
 
         <div>
           <label for="item-date">Transaction Date</label>
-          <input class="form-control" type="date" name="" id="item-date">
+          <input class="form-control" type="date" name="" id="item-date"
+          [ngModel]="dirtyTransaction.creationTime | date:'YYYY-MM-dd'"
+          (ngModelChange)="dirtyTransaction.creationTime = toDate($event)">
         </div>
 
         <div>
           <label for="item-amount">Amount</label>
-          <input class="form-control" type="number" name="" id="item-amount">
+          <input class="form-control" type="number" name="" id="item-amount" [(ngModel)]="dirtyTransaction.amount">
         </div>
 
         <div>
           <label for="item-description">Description</label>
-          <input class="form-control" type="text" name="" id="item-description">
+          <input class="form-control" type="text" name="" id="item-description"
+            [(ngModel)]="dirtyTransaction.description">
         </div>
 
         <div>

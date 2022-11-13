@@ -2,6 +2,10 @@
 
 // transaction list
 
+.list-panel {
+    overflow: auto;
+}
+
 .transaction-item {
     display: flex;
     margin-left: 0.5rem;

@@ -76,8 +76,18 @@ export class TransactionsComponent implements OnInit {
     category: "vacation"
   }].sort((a, b) => { if (a.creationTime > b.creationTime) return 1; return -1; });
 
+  public dirtyTransaction: Transaction = new Transaction();
+
   ngOnInit() {
     this.getCategories();
+  }
+
+  public openForEdit(id: string) {
+    this.dirtyTransaction = this.transactions.find(x => x.id === id) ?? new Transaction();
+  }
+
+  public toDate(input: string): Date {
+    return new Date(input);
   }
 
   private async getCategories() {
